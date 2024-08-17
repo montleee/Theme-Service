@@ -54,7 +54,7 @@ public class QuestionController {
 
         questionService.deleteQuestion(id);
         var response = new ApiResponseDto("Question deleted successfully", HttpStatus.NO_CONTENT.value());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
 
     }
 }

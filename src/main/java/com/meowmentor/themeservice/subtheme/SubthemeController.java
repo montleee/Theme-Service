@@ -21,9 +21,10 @@ public class SubthemeController {
 
     @PostMapping
     public ResponseEntity<ApiResponseDto> createSubtheme(@RequestBody CreateSubthemeDto dto) {
-        return subthemeService.createSubtheme(dto);
+        subthemeService.createSubtheme(dto);
+        ApiResponseDto response = new ApiResponseDto("Subtheme created successfully", HttpStatus.CREATED.value());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
     @GetMapping
     public ResponseEntity<List<Subtheme>> getAllSubthemes() {
@@ -31,42 +32,29 @@ public class SubthemeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Subtheme> getSubthemeById(@PathVariable Long id) {
+    public ResponseEntity<Object> getSubthemeById(@PathVariable Long id) {
         Optional<Subtheme> subtheme = subthemeService.getSubthemeById(id);
-        return subtheme.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+
+        if (subtheme.isPresent()) {
+            return ResponseEntity.ok(subtheme.get());
+        } else {
+            ApiResponseDto response = new ApiResponseDto("Subtheme not found", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> updateQuestion(@PathVariable Long id, @RequestBody Subtheme subtheme) {
 
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ApiResponseDto> updateSubtheme(@PathVariable Long id, @RequestBody Subtheme subtheme) {
-//        try {
-//            if (!subthemeService.getSubthemeById(id).isPresent()) {
-//                return ResponseEntity.notFound().build();
-//            }
-//            subtheme.setId(id);
-//            Subtheme updatedSubtheme = subthemeService.saveSubtheme(subtheme);
-//            ApiResponseDto response = new ApiResponseDto("Subtheme updated successfully", HttpStatus.OK.value());
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            ApiResponseDto response = new ApiResponseDto("Error updating subtheme", HttpStatus.INTERNAL_SERVER_ERROR.value());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//        }
-//    }
+        subthemeService.updateSubtheme(id,subtheme);
+        var response = new ApiResponseDto("Question updated successfully", HttpStatus.CREATED.value());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseDto> deleteSubtheme(@PathVariable Long id) {
-        try {
-            if (!subthemeService.getSubthemeById(id).isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
-            subthemeService.deleteSubtheme(id);
-            ApiResponseDto response = new ApiResponseDto("Subtheme deleted successfully", HttpStatus.NO_CONTENT.value());
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            ApiResponseDto response = new ApiResponseDto("Error deleting subtheme", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+        subthemeService.deleteSubtheme(id);
+        ApiResponseDto response = new ApiResponseDto("Subtheme deleted successfully", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
     }
 }

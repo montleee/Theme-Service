@@ -33,4 +33,12 @@ public class Subtheme {
     @OneToMany(mappedBy = "subtheme", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Question> questions;
+
+
+    public void updateFrom(Subtheme updatedSubtheme) {
+        this.title = updatedSubtheme.getTitle();
+        // Вы можете обновить другие поля, если необходимо
+        // Обновление `theme` и `questions` не выполняется для простого обновления
+        // Если нужно обновить эти поля, убедитесь, что вы делаете это корректно
+    }
 }
