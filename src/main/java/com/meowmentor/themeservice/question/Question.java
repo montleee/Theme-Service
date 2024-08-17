@@ -1,0 +1,38 @@
+package com.meowmentor.themeservice.question;
+import com.meowmentor.themeservice.question.Difficulty;
+import com.meowmentor.themeservice.subtheme.Subtheme;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Question {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String question;
+
+    @ElementCollection
+    @CollectionTable(name = "answers", joinColumns = @JoinColumn(name = "question_id"))
+    @Column(name = "answer")
+    private List<String> answers;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Difficulty difficulty;
+
+    @ManyToOne
+    @JoinColumn(name = "subtheme_id", nullable = false)
+    private Subtheme subtheme;
+}
