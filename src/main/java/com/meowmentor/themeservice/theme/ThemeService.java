@@ -35,4 +35,12 @@ public class ThemeService {
     }
 
 
+    public boolean deleteTheme(Long id) {
+        if (themeRepository.existsById(id)) {
+            themeRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

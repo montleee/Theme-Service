@@ -44,5 +44,23 @@ public class ThemeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> deleteTheme(@PathVariable Long id) {
+        try {
+            boolean deleted = themeService.deleteTheme(id);
+            if (deleted) {
+                // Возвращаем успешный ответ
+                ApiResponseDto response = new ApiResponseDto("Theme deleted successfully", HttpStatus.OK.value());
+                return ResponseEntity.ok(response);
+            } else {
+                // Возвращаем ответ, если тема не найдена
+                ApiResponseDto response = new ApiResponseDto("Theme not found", HttpStatus.NOT_FOUND.value());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+        } catch (Exception e) {
+            // Логирование ошибки и возврат ответа с ошибкой
+            ApiResponseDto response = new ApiResponseDto("Error deleting theme", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

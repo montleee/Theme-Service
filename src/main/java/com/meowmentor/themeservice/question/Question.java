@@ -1,4 +1,5 @@
 package com.meowmentor.themeservice.question;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.meowmentor.themeservice.question.Difficulty;
 import com.meowmentor.themeservice.subtheme.Subtheme;
 import jakarta.persistence.*;
@@ -34,5 +35,6 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "subtheme_id", nullable = false)
+    @JsonBackReference
     private Subtheme subtheme;
 }

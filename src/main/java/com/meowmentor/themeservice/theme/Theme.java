@@ -1,5 +1,6 @@
 package com.meowmentor.themeservice.theme;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.meowmentor.themeservice.subtheme.Subtheme;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class Theme {
 //    @Embedded
 //    private Award award;
     @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Subtheme> subthemes;
 
 }

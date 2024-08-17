@@ -1,5 +1,6 @@
-package com.meowmentor.themeservice.theme;
+package com.meowmentor.themeservice.theme.mapper;
 
+import com.meowmentor.themeservice.theme.RelatedTheme;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import com.fasterxml.jackson.core.type.TypeReference;

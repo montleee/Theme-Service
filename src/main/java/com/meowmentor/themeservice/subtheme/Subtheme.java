@@ -1,4 +1,6 @@
 package com.meowmentor.themeservice.subtheme;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.meowmentor.themeservice.question.Question;
 import com.meowmentor.themeservice.theme.Theme;
 import jakarta.persistence.*;
@@ -25,8 +27,10 @@ public class Subtheme {
 
     @ManyToOne
     @JoinColumn(name = "theme_id", nullable = false)
+    @JsonBackReference
     private Theme theme;
 
-    @OneToMany(mappedBy = "subtheme")
+    @OneToMany(mappedBy = "subtheme", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Question> questions;
 }

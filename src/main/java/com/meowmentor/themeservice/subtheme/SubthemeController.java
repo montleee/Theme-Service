@@ -4,6 +4,7 @@ package com.meowmentor.themeservice.subtheme;
 import com.meowmentor.themeservice.ApiResponseDto;
 import com.meowmentor.themeservice.subtheme.dto.CreateSubthemeDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +27,7 @@ public class SubthemeController {
 
     @GetMapping
     public ResponseEntity<List<Subtheme>> getAllSubthemes() {
-        List<Subtheme> subthemes = subthemeService.getAllSubthemes();
-        return ResponseEntity.ok(subthemes);
+        return ResponseEntity.ok(subthemeService.getAllSubthemes());
     }
 
     @GetMapping("/{id}")
@@ -55,18 +55,18 @@ public class SubthemeController {
 //        }
 //    }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<ApiResponseDto> deleteSubtheme(@PathVariable Long id) {
-//        try {
-//            if (!subthemeService.getSubthemeById(id).isPresent()) {
-//                return ResponseEntity.notFound().build();
-//            }
-//            subthemeService.deleteSubtheme(id);
-//            ApiResponseDto response = new ApiResponseDto("Subtheme deleted successfully", HttpStatus.NO_CONTENT.value());
-//            return ResponseEntity.noContent().build();
-//        } catch (Exception e) {
-//            ApiResponseDto response = new ApiResponseDto("Error deleting subtheme", HttpStatus.INTERNAL_SERVER_ERROR.value());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//        }
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> deleteSubtheme(@PathVariable Long id) {
+        try {
+            if (!subthemeService.getSubthemeById(id).isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            subthemeService.deleteSubtheme(id);
+            ApiResponseDto response = new ApiResponseDto("Subtheme deleted successfully", HttpStatus.NO_CONTENT.value());
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            ApiResponseDto response = new ApiResponseDto("Error deleting subtheme", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
