@@ -1,5 +1,6 @@
 package com.meowmentor.themeservice.subtheme;
 import com.meowmentor.themeservice.question.Question;
+import com.meowmentor.themeservice.theme.Theme;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,9 @@ public class Subtheme {
     @Column(nullable = false)
     private String title;
 
-//    @ManyToOne
-//    @JoinColumn(name = "theme_id", nullable = false)
-//    private Theme theme;
+    @ManyToOne
+    @JoinColumn(name = "theme_id", nullable = false)
+    private Theme theme;
 
     @OneToMany(mappedBy = "subtheme")
     private Set<Question> questions;
