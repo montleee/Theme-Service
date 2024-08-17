@@ -2,8 +2,9 @@ package com.meowmentor.themeservice.theme;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.meowmentor.themeservice.subtheme.Subtheme;
-import com.meowmentor.themeservice.theme.mapper.RelatedThemeConverter;
 
+import com.meowmentor.themeservice.theme.components.Award;
+import com.meowmentor.themeservice.theme.components.RelatedTheme;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

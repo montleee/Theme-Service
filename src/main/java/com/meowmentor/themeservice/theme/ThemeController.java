@@ -31,21 +31,11 @@ public class ThemeController {
 
     @PostMapping
     public ResponseEntity<ApiResponseDto> createTheme(@RequestBody CreateThemeDto dto) {
-        try {
-            // Создать и сохранить новую тему
-            log.info("ids "+dto.getRelatedThemesIds() );
-            Theme theme = themeService.createTheme(dto);
 
-            // Возвращаем успешный ответ
-            ApiResponseDto response = new ApiResponseDto("Theme created successfully", HttpStatus.CREATED.value());
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
-        } catch (Exception e) {
-            // Логирование ошибки и возврат ответа с ошибкой
-            ApiResponseDto response = new ApiResponseDto("Error creating theme", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+          return themeService.createTheme(dto);
     }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponseDto> deleteTheme(@PathVariable Long id) {
         try {

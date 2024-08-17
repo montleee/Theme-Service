@@ -1,9 +1,14 @@
 package com.meowmentor.themeservice.theme;
 
+import com.meowmentor.themeservice.ApiResponseDto;
+import com.meowmentor.themeservice.theme.components.Award;
+import com.meowmentor.themeservice.theme.components.RelatedTheme;
 import com.meowmentor.themeservice.theme.dto.CreateThemeDto;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -23,8 +28,10 @@ public class ThemeService {
     public List<Theme> getAllThemes() {
         return themeRepository.findAll();
     }
-    public Theme createTheme(CreateThemeDto dto) {
-        log.info("Creating theme with DTO: {}", dto);
+
+
+    public ResponseEntity<ApiResponseDto> createTheme(CreateThemeDto dto) {
+
 
         Theme theme = new Theme();
         theme.setTitle(dto.getTitle());
@@ -33,7 +40,7 @@ public class ThemeService {
         // Установка изображения по умолчанию, если не указано
         String image = defaultIfEmpty(dto.getImage(), "default-image.png");
         theme.setThemeImage(image);
-        log.info("Set theme image to: {}", image);
+
 
         // Создание и установка объекта Award с значениями по умолчанию
         Award award = new Award();
@@ -41,35 +48,23 @@ public class ThemeService {
         award.setAwardImage(defaultIfEmpty(dto.getAwardImage(), "default-award-image.png"));
         award.setAwardTitle(defaultIfEmpty(dto.getAwardTitle(), "Default award title"));
         theme.setAward(award);
-        log.info("Award details set - description: {}, image: {}, title: {}",
-                award.getAwardDescription(), award.getAwardImage(), award.getAwardTitle());
 
-        // Логирование ID связанных тем
-        log.info("Received related theme IDs: {}", dto.getRelatedThemesIds());
 
         // Получение связанных тем
         List<Theme> foundThemes = themeRepository.findAllById(dto.getRelatedThemesIds());
-        log.info("Found themes: {}", foundThemes);
 
         // Преобразование найденных тем в RelatedTheme
         List<RelatedTheme> relatedThemes = foundThemes.stream()
                 .map(this::convertToRelatedTheme)
                 .collect(Collectors.toList());
-        log.info("Converted to related themes: {}", relatedThemes);
+
 
         // Установка связанных тем
         theme.setRelatedThemes(relatedThemes.isEmpty() ? Collections.emptyList() : relatedThemes);
-        log.info("Final related themes set: {}", theme.getRelatedThemes());
 
-        // Сохранение темы
-        try {
-            Theme savedTheme = themeRepository.save(theme);
-            log.info("Saved theme with ID: {}", savedTheme.getId());
-            return savedTheme;
-        } catch (Exception e) {
-            log.error("Error saving theme: {}", e.getMessage(), e);
-            throw new RuntimeException("Error saving theme", e);
-        }
+        themeRepository.save(theme);
+        ApiResponseDto response = new ApiResponseDto("Theme created successfully", HttpStatus.CREATED.value());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
 

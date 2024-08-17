@@ -1,6 +1,6 @@
 package com.meowmentor.themeservice.question.dto;
 
-import com.meowmentor.themeservice.question.Difficulty;
+import com.meowmentor.themeservice.question.dto.components.Difficulty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

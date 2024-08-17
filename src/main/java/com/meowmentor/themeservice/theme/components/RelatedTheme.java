@@ -1,4 +1,4 @@
-package com.meowmentor.themeservice.theme;
+package com.meowmentor.themeservice.theme.components;
 
 import jakarta.persistence.Embeddable;
 import lombok.Data;

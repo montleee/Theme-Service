@@ -1,4 +1,4 @@
-package com.meowmentor.themeservice.theme;
+package com.meowmentor.themeservice.theme.components;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,18 +1,19 @@
 package com.meowmentor.themeservice.question;
 
-import com.meowmentor.themeservice.ApiResponseDto;
+import com.meowmentor.themeservice.exceptions.QuestionNotFoundException;
 import com.meowmentor.themeservice.exceptions.SubthemeNotFoundException;
 import com.meowmentor.themeservice.question.dto.CreateQuestionDto;
 import com.meowmentor.themeservice.subtheme.Subtheme;
 import com.meowmentor.themeservice.subtheme.SubthemeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
@@ -20,44 +21,49 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final SubthemeRepository subthemeRepository;
 
+    public List<Question> getAllQuestions() {
+        return questionRepository.findAll();
+    }
 
-    public ResponseEntity<ApiResponseDto> createQuestion(CreateQuestionDto dto) {
-        // Найти Subtheme по ID
+    public Optional<Question> getQuestionById(Long id) {
+        Optional<Question> question = questionRepository.findById(id);
+        return question;
+    }
+
+    @Transactional
+    public void createQuestion(CreateQuestionDto dto) {
+
         Subtheme subtheme = subthemeRepository.findById(dto.getSubthemeId())
                 .orElseThrow(() -> new SubthemeNotFoundException(dto.getSubthemeId()));
 
-        // Создать новый вопрос
+
         Question question = new Question();
         question.setQuestion(dto.getQuestion());
         question.setAnswers(dto.getAnswers());
         question.setDifficulty(dto.getDifficulty());
         question.setSubtheme(subtheme);
 
-        // Сохранить вопрос
         questionRepository.save(question);
-
-        // Логирование
-        System.out.println("Created question with text '" + question.getQuestion() + "' under subtheme: " + subtheme.getTitle());
-
-        // Возвращаем успешный ответ
-        ApiResponseDto response = new ApiResponseDto("Question created successfully", HttpStatus.CREATED.value());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Transactional
+    public void updateQuestion(Long id, Question updatedQuestion) {
 
+        Question existingQuestion = questionRepository.findById(id)
+                .orElseThrow(() -> new QuestionNotFoundException(id));
 
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+        existingQuestion.updateFrom(updatedQuestion);
+
+       questionRepository.save(existingQuestion);
     }
-
-    public Optional<Question> getQuestionById(Long id) {
-        return questionRepository.findById(id);
-    }
-
 
     public void deleteQuestion(Long id) {
-        questionRepository.deleteById(id);
+        Question question = getQuestionById(id)
+                .orElseThrow(() -> new QuestionNotFoundException(id));
+        questionRepository.delete(question);
     }
+
+
 
 
 }

@@ -1,6 +1,6 @@
 package com.meowmentor.themeservice.question;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.meowmentor.themeservice.question.Difficulty;
+import com.meowmentor.themeservice.question.dto.components.Difficulty;
 import com.meowmentor.themeservice.subtheme.Subtheme;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -37,4 +37,11 @@ public class Question {
     @JoinColumn(name = "subtheme_id", nullable = false)
     @JsonBackReference
     private Subtheme subtheme;
+
+    public void updateFrom(Question updatedQuestion) {
+        this.question = updatedQuestion.getQuestion();
+        this.answers = updatedQuestion.getAnswers();
+        this.difficulty = updatedQuestion.getDifficulty();
+        this.subtheme = updatedQuestion.getSubtheme(); // Учтите возможные обновления связанного объекта
+    }
 }

@@ -19,38 +19,42 @@ public class QuestionController {
 
     @GetMapping
     public ResponseEntity<List<Question>> getAllQuestions() {
-        List<Question> questions = questionService.getAllQuestions();
-        return ResponseEntity.ok(questions);
+        return ResponseEntity.ok(questionService.getAllQuestions());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
+    public ResponseEntity<Object> getQuestionById(@PathVariable Long id) {
         Optional<Question> question = questionService.getQuestionById(id);
-        return question.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+
+        if (question.isPresent()) {
+            return ResponseEntity.ok(question.get());
+        } else {
+            ApiResponseDto response = new ApiResponseDto("Question not found", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 
     @PostMapping
     public ResponseEntity<ApiResponseDto> createQuestion(@RequestBody CreateQuestionDto dto) {
-        return questionService.createQuestion(dto);
+         questionService.createQuestion(dto);
+         var response = new ApiResponseDto("Question created successfully", HttpStatus.CREATED.value());
+         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Question> updateQuestion(@PathVariable Long id, @RequestBody Question question) {
-//        if (!questionService.getQuestionById(id).isPresent()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        question.setId(id);
-//        Question updatedQuestion = questionService.saveQuestion(question);
-//        return ResponseEntity.ok(updatedQuestion);
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> updateQuestion(@PathVariable Long id, @RequestBody Question question) {
+
+        questionService.updateQuestion(id,question);
+        var response = new ApiResponseDto("Question updated successfully", HttpStatus.CREATED.value());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
-        if (!questionService.getQuestionById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ApiResponseDto> deleteQuestion(@PathVariable Long id) {
+
         questionService.deleteQuestion(id);
-        return ResponseEntity.noContent().build();
+        var response = new ApiResponseDto("Question deleted successfully", HttpStatus.NO_CONTENT.value());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
     }
 }
