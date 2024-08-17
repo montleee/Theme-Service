@@ -1,5 +1,6 @@
 package com.meowmentor.themeservice.question;
 
+import com.meowmentor.themeservice.exceptions.NoQuestionsFoundException;
 import com.meowmentor.themeservice.exceptions.QuestionNotFoundException;
 import com.meowmentor.themeservice.exceptions.SubthemeNotFoundException;
 import com.meowmentor.themeservice.question.dto.CreateQuestionDto;
@@ -54,6 +55,40 @@ public class QuestionService {
         questionRepository.save(question);
         log.info("Created question with ID {} under subtheme with ID {}", question.getId(), subtheme.getId());
     }
+    public Optional<Question> getRandomQuestion() {
+
+            log.info("Fetching a random question.");
+            Optional<Question> question = questionRepository.findRandomQuestion();
+            if (question.isEmpty()) {
+                log.warn("No questions found in the repository.");
+            } else {
+                log.info("Random question fetched successfully: {}", question.get().getQuestion());
+            }
+            return question;
+
+    }
+
+    public Optional<Question> getRandomQuestionBySubtheme(Long subthemeId) {
+        log.info("Fetching a random question for subtheme ID: {}", subthemeId);
+
+        Optional<Subtheme> subtheme = subthemeRepository.findById(subthemeId);
+        if (subtheme.isEmpty()) {
+            log.warn("Subtheme with ID {} not found.", subthemeId);
+            throw new SubthemeNotFoundException(subthemeId);
+        }
+
+        List<Question> questions = questionRepository.findBySubthemeId(subthemeId);
+        if (questions.isEmpty()) {
+            log.warn("No questions found for subtheme ID {}.", subthemeId);
+            throw new NoQuestionsFoundException(subthemeId);
+        }
+
+        Random random = new Random();
+        Question randomQuestion = questions.get(random.nextInt(questions.size()));
+        log.info("Random question for subtheme ID {}: {}", subthemeId, randomQuestion.getQuestion());
+
+        return Optional.of(randomQuestion);
+    }
 
     @Transactional
     public void updateQuestion(Long id, Question updatedQuestion) {
@@ -78,22 +113,5 @@ public class QuestionService {
         log.info("Deleted question with ID {}", id);
     }
 
-    public Optional<Question> getRandomQuestion() {
-        return questionRepository.findRandomQuestion();
-    }
 
-    public Optional<Question> getRandomQuestionBySubtheme(Long id) {
-        Optional<Subtheme> subtheme = subthemeRepository.findById(id);
-        if (subtheme.isEmpty()) {
-            return Optional.empty();
-        }
-        List<Question> questions = questionRepository.findBySubthemeId(id);
-        if (questions.isEmpty()) {
-            return Optional.empty();
-        }
-        Random random = new Random();
-        Question randomQuestion = questions.get(random.nextInt(questions.size()));
-
-        return Optional.of(randomQuestion);
-    }
 }

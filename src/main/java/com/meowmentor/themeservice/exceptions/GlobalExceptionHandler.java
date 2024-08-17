@@ -17,6 +17,13 @@ public class GlobalExceptionHandler {
                 "Subtheme not found", HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+    @ExceptionHandler(NoQuestionsFoundException.class)
+    public ResponseEntity<ApiResponseDto> handleNoQuestionsFoundException(NoQuestionsFoundException ex) {
+        log.warn("NoQuestionsFoundException: ", ex);
+        ApiResponseDto response = new ApiResponseDto(
+                ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
     @ExceptionHandler(QuestionNotFoundException.class)
     public ResponseEntity<ApiResponseDto> handleQuestionNotFoundException(QuestionNotFoundException ex) {
         log.warn("QuestionNotFoundException: ", ex);
