@@ -2,12 +2,17 @@ package com.meowmentor.themeservice.theme;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.meowmentor.themeservice.subtheme.Subtheme;
+import com.meowmentor.themeservice.theme.mapper.RelatedThemeConverter;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+
+import java.util.List;
 import java.util.Set;
 @Entity
 @Getter
@@ -25,8 +30,7 @@ public class Theme {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private String themeImage; // Переименуйте поле
+    private String themeImage;
 
     @Embedded
     private Award award;
@@ -34,4 +38,8 @@ public class Theme {
     @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Subtheme> subthemes;
+
+    @ElementCollection
+    @CollectionTable(name = "related_theme", joinColumns = @JoinColumn(name = "theme_id"))
+    private List<RelatedTheme> relatedThemes;
 }

@@ -1,10 +1,10 @@
 package com.meowmentor.themeservice.theme;
 
+import jakarta.persistence.Embeddable;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Embeddable
 @Data
 @NoArgsConstructor
 public class RelatedTheme {

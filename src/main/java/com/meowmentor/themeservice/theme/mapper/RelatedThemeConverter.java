@@ -16,6 +16,9 @@ public class RelatedThemeConverter implements AttributeConverter<List<RelatedThe
 
     @Override
     public String convertToDatabaseColumn(List<RelatedTheme> attribute) {
+        if (attribute == null) {
+            return null;
+        }
         try {
             return mapper.writeValueAsString(attribute);
         } catch (IOException e) {
@@ -25,6 +28,9 @@ public class RelatedThemeConverter implements AttributeConverter<List<RelatedThe
 
     @Override
     public List<RelatedTheme> convertToEntityAttribute(String dbData) {
+        if (dbData == null) {
+            return null;
+        }
         try {
             return mapper.readValue(dbData, new TypeReference<List<RelatedTheme>>() {});
         } catch (IOException e) {

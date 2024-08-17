@@ -5,12 +5,13 @@ import com.meowmentor.themeservice.ApiResponseDto;
 import com.meowmentor.themeservice.theme.dto.CreateThemeDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/themes")
 @RequiredArgsConstructor
@@ -29,9 +30,10 @@ public class ThemeController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponseDto> createTheme(@Valid @RequestBody CreateThemeDto dto) {
+    public ResponseEntity<ApiResponseDto> createTheme(@RequestBody CreateThemeDto dto) {
         try {
             // Создать и сохранить новую тему
+            log.info("ids "+dto.getRelatedThemesIds() );
             Theme theme = themeService.createTheme(dto);
 
             // Возвращаем успешный ответ

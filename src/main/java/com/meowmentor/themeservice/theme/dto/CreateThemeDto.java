@@ -18,5 +18,9 @@ public class CreateThemeDto {
     private String description;
 
     private String image;
-//    private List<Long> relatedThemesIds;
+
+    private String awardDescription;
+    private String awardImage;
+    private String awardTitle;
+    private List<Long> relatedThemesIds;
 }
