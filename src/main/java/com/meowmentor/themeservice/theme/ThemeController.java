@@ -2,9 +2,7 @@ package com.meowmentor.themeservice.theme;
 
 
 import com.meowmentor.themeservice.ApiResponseDto;
-import com.meowmentor.themeservice.subtheme.Subtheme;
 import com.meowmentor.themeservice.theme.dto.CreateThemeDto;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -35,7 +32,17 @@ public class ThemeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{id]")
+    @GetMapping("/title/{title}")
+    public ResponseEntity<Object> searchThemesByTitle(@PathVariable String title) {
+        Optional<Theme> theme= themeService.findThemeByTitle(title);
+        if (theme.isPresent()) {
+            return ResponseEntity.ok(theme.get());
+        } else {
+            ApiResponseDto response = new ApiResponseDto("Theme not found", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getThemeById(@PathVariable Long id) {
 
         Optional<Theme> theme = themeService.getThemeById(id);
@@ -47,7 +54,7 @@ public class ThemeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
-    @PutMapping("/{id]")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> getThemeById(@PathVariable Long id, @RequestBody Theme theme) {
 
         themeService.updateTheme(id,theme);

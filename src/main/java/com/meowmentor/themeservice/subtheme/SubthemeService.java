@@ -45,9 +45,7 @@ public class SubthemeService {
         log.info("Creating subtheme with title: {} under theme ID: {}", dto.getTitle(), dto.getThemeId());
 
         Theme theme = themeRepository.findById(dto.getThemeId())
-                .orElseThrow(() -> {
-                    return new ThemeNotFoundException(dto.getThemeId());
-                });
+                .orElseThrow(() -> new ThemeNotFoundException(dto.getThemeId()));
 
         Subtheme newSubtheme = new Subtheme();
         newSubtheme.setTitle(dto.getTitle());
@@ -62,9 +60,7 @@ public class SubthemeService {
         log.info("Updating subtheme with ID: {}", id);
 
         Subtheme existingSubtheme = subthemeRepository.findById(id)
-                .orElseThrow(() -> {
-                    return new SubthemeNotFoundException(id);
-                });
+                .orElseThrow(() -> new SubthemeNotFoundException(id));
 
         existingSubtheme.updateFrom(updatedSubtheme);
         subthemeRepository.save(existingSubtheme);
@@ -76,7 +72,6 @@ public class SubthemeService {
         log.info("Deleting subtheme with ID: {}", id);
 
         if (!subthemeRepository.existsById(id)) {
-            log.warn("Subtheme with ID {} not found", id);
             throw new SubthemeNotFoundException(id);
         }
 

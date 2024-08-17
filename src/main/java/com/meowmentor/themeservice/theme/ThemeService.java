@@ -39,6 +39,17 @@ public class ThemeService {
         }
         return theme;
     }
+    public Optional<Theme> findThemeByTitle(String title) {
+        log.info("Searching for theme with title: {}", title);
+        Optional<Theme> theme = themeRepository.findByTitle(title);
+        if (theme.isPresent()) {
+            log.info("Theme found: {}", theme.get().getTitle());
+        } else {
+            log.warn("Theme with title '{}' not found", title);
+        }
+        return theme;
+    }
+
 
     public void createTheme(CreateThemeDto dto) {
         log.info("Creating new theme with title: {}", dto.getTitle());
@@ -104,4 +115,6 @@ public class ThemeService {
         relatedTheme.setTitle(theme.getTitle());
         return relatedTheme;
     }
+
+
 }
