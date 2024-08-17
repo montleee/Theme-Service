@@ -43,4 +43,28 @@ public class Theme {
     @ElementCollection
     @CollectionTable(name = "related_theme", joinColumns = @JoinColumn(name = "theme_id"))
     private List<RelatedTheme> relatedThemes;
+
+    public void updateFrom(Theme updatedTheme) {
+        if (updatedTheme.getTitle() != null) {
+            this.title = updatedTheme.getTitle();
+        }
+        if (updatedTheme.getDescription() != null) {
+            this.description = updatedTheme.getDescription();
+        }
+        if (updatedTheme.getThemeImage() != null) {
+            this.themeImage = updatedTheme.getThemeImage();
+        }
+        if (updatedTheme.getAward() != null) {
+            this.award = updatedTheme.getAward();
+        }
+        if (updatedTheme.getRelatedThemes() != null) {
+            this.relatedThemes.clear();
+            this.relatedThemes.addAll(updatedTheme.getRelatedThemes());
+        }
+        if (updatedTheme.getSubthemes() != null) {
+            this.subthemes.clear();
+            this.subthemes.addAll(updatedTheme.getSubthemes());
+        }
+    }
+
 }
