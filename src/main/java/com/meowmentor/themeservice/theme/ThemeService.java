@@ -26,7 +26,7 @@ public class ThemeService {
         if (image == null || image.trim().isEmpty()) {
             image = "default-image.png";
         }
-        theme.setImage(image);
+        theme.setThemeImage(image);
 
         // Здесь можно обработать связанные темы, если это нужно
         // Например, использовать themeRepository.findAllById(dto.getRelatedThemesIds()) и установить связанные темы

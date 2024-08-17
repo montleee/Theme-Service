@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -27,12 +26,12 @@ public class Theme {
     private String description;
 
     @Column(nullable = false)
-    private String image;
-//
-//    @Embedded
-//    private Award award;
+    private String themeImage; // Переименуйте поле
+
+    @Embedded
+    private Award award;
+
     @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Subtheme> subthemes;
-
 }

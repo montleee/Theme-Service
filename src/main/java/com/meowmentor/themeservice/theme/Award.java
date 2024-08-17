@@ -8,15 +8,15 @@ import jakarta.persistence.Embeddable;
 @Setter
 @Embeddable
 public class Award {
-    private String title;
-    private String image;
+    private String awardTitle;
+    private String awardImage;
     private String awardDescription;
 
     public Award() {}
 
     public Award(String title, String image, String description) {
-        this.title = title;
-        this.image = image;
+        this.awardTitle = title;
+        this.awardImage = image;
         this.awardDescription = description;
     }
 }
