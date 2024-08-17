@@ -81,4 +81,19 @@ public class QuestionService {
     public Optional<Question> getRandomQuestion() {
         return questionRepository.findRandomQuestion();
     }
+
+    public Optional<Question> getRandomQuestionBySubtheme(Long id) {
+        Optional<Subtheme> subtheme = subthemeRepository.findById(id);
+        if (subtheme.isEmpty()) {
+            return Optional.empty();
+        }
+        List<Question> questions = questionRepository.findBySubthemeId(id);
+        if (questions.isEmpty()) {
+            return Optional.empty();
+        }
+        Random random = new Random();
+        Question randomQuestion = questions.get(random.nextInt(questions.size()));
+
+        return Optional.of(randomQuestion);
+    }
 }

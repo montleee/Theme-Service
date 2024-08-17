@@ -52,6 +52,18 @@ public class QuestionController {
         }
     }
 
+    @GetMapping("/random/{id}")
+    public ResponseEntity<Object> getRandomQuestionBySubtheme(@PathVariable Long id) {
+        Optional<Question> randomQuestion = questionService.getRandomQuestionBySubtheme(id);
+
+        if (randomQuestion.isPresent()) {
+            return ResponseEntity.ok(randomQuestion.get());
+        } else {
+            ApiResponseDto response = new ApiResponseDto("No questions available", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponseDto> updateQuestion(@PathVariable Long id, @RequestBody Question question) {
 
