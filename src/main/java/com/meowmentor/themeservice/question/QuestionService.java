@@ -22,20 +22,27 @@ public class QuestionService {
     private final SubthemeRepository subthemeRepository;
 
     public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+        List<Question> questions = questionRepository.findAll();
+        log.info("Retrieved {} questions", questions.size());
+        return questions;
     }
 
     public Optional<Question> getQuestionById(Long id) {
         Optional<Question> question = questionRepository.findById(id);
+        if (question.isPresent()) {
+            log.info("Question with ID {} found", id);
+        } else {
+            log.info("Question with ID {} not found", id);
+        }
         return question;
     }
 
     @Transactional
     public void createQuestion(CreateQuestionDto dto) {
-
         Subtheme subtheme = subthemeRepository.findById(dto.getSubthemeId())
-                .orElseThrow(() -> new SubthemeNotFoundException(dto.getSubthemeId()));
-
+                .orElseThrow(() -> {
+                    return new SubthemeNotFoundException(dto.getSubthemeId());
+                });
 
         Question question = new Question();
         question.setQuestion(dto.getQuestion());
@@ -44,26 +51,29 @@ public class QuestionService {
         question.setSubtheme(subtheme);
 
         questionRepository.save(question);
+        log.info("Created question with ID {} under subtheme with ID {}", question.getId(), subtheme.getId());
     }
 
     @Transactional
     public void updateQuestion(Long id, Question updatedQuestion) {
-
         Question existingQuestion = questionRepository.findById(id)
-                .orElseThrow(() -> new QuestionNotFoundException(id));
+                .orElseThrow(() -> {
+                    return new QuestionNotFoundException(id);
+                });
 
         existingQuestion.updateFrom(updatedQuestion);
 
-       questionRepository.save(existingQuestion);
+        questionRepository.save(existingQuestion);
+        log.info("Updated question with ID {}", id);
     }
 
     public void deleteQuestion(Long id) {
         Question question = getQuestionById(id)
-                .orElseThrow(() -> new QuestionNotFoundException(id));
+                .orElseThrow(() -> {
+                    return new QuestionNotFoundException(id);
+                });
+
         questionRepository.delete(question);
+        log.info("Deleted question with ID {}", id);
     }
-
-
-
-
 }
