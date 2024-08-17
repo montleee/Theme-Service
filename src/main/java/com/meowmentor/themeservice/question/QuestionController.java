@@ -40,6 +40,17 @@ public class QuestionController {
          var response = new ApiResponseDto("Question created successfully", HttpStatus.CREATED.value());
          return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @GetMapping("/random")
+    public ResponseEntity<Object> getRandomQuestion() {
+        Optional<Question> randomQuestion = questionService.getRandomQuestion();
+
+        if (randomQuestion.isPresent()) {
+            return ResponseEntity.ok(randomQuestion.get());
+        } else {
+            ApiResponseDto response = new ApiResponseDto("No questions available", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponseDto> updateQuestion(@PathVariable Long id, @RequestBody Question question) {

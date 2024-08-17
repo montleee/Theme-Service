@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -75,5 +76,9 @@ public class QuestionService {
 
         questionRepository.delete(question);
         log.info("Deleted question with ID {}", id);
+    }
+
+    public Optional<Question> getRandomQuestion() {
+        return questionRepository.findRandomQuestion();
     }
 }
