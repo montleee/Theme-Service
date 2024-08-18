@@ -1,12 +1,11 @@
+# Используем официальный образ OpenJDK как базовый
 FROM openjdk:17-jdk-slim
 
+# Устанавливаем рабочий каталог
 WORKDIR /app
 
-# Копируем файл JAR приложения в рабочую директорию контейнера
-COPY target/demo-0.0.1-SNAPSHOT.jar /app/demo.jar
+# Копируем JAR-файл приложения в рабочий каталог
+COPY target/Theme-service-0.0.1-SNAPSHOT.jar app.jar
 
-# Открываем порт 8080 для доступа к приложению
-EXPOSE 8080
-
-# Запускаем приложение при запуске контейнера
-ENTRYPOINT ["java", "-jar", "demo.jar"]
+# Определяем команду для запуска приложения
+ENTRYPOINT ["java", "-jar", "app.jar"]
