@@ -2,8 +2,11 @@ version: '3.8'
 
 services:
   eureka-server:
-    image: montlee/eureka-server:latest
+    image: montlee/eureka:newDocker
     container_name: eureka-server
+    environment:
+      EUREKA_HOSTNAME: eureka-server
+      EUREKA_URL: http://eureka-server:8761/eureka/
     ports:
       - "8761:8761"
     networks:
@@ -23,17 +26,17 @@ services:
     networks:
       - app-network
 
-  app:
-    image: montlee/theme-service:latest
+  theme-service:
+    image: montlee/theme-service:newDocker
     container_name: theme-service
     depends_on:
       - postgres
-#      - eureka-server
+      - eureka-server
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/your_database_name
       SPRING_DATASOURCE_USERNAME: your_username
       SPRING_DATASOURCE_PASSWORD: your_password
-      EUREKA_URL: http://localhost:8761/eureka/
+      EUREKA_URL: http://eureka-server:8761/eureka/
     ports:
       - "8080:8080"
     networks:
